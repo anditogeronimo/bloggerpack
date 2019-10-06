@@ -12,6 +12,7 @@ Head
 <b:comment>=== Custom all-head-content ===</b:comment>
 
 <b:include data='{
+  faviconImage: "https://lh4.googleusercontent.com/_E5JYoHlDglk/TR-dax6BRCI/AAAAAAAADjM/hKMqNHjN9-w/s1600/favicon.png",
   socialImage: "https://example.com/1200x630.png",
   titleSeparator: "|",
   facebook: {
@@ -1369,7 +1370,7 @@ Default markups
 
       <b:comment>=== Required meta tags ===</b:comment>
 
-      <meta charset='utf-8'/>
+      <meta expr:charset='data:blog.encoding'/>
       <meta name='viewport' content='width=device-width, initial-scale=1, shrink-to-fit=no'/>
 
       <b:comment>=== Title ===</b:comment>
@@ -1410,7 +1411,26 @@ Default markups
       <b:comment>=== Default ===</b:comment>
 
       <meta content='blogger' name='generator'/>
+      
+      <b:comment>=== Favicon ===</b:comment>
+      
       <link expr:href='data:blog.blogspotFaviconUrl' rel='icon' type='image/x-icon'/>
+      <meta expr:content='data:view.title.escaped' name='application-name'/>
+       <b:with value='data:faviconImage' var='faviUri'>
+       <b:loop values='[32,96,192]' var='faviSize'>
+        <link expr:href='resizeImage(data:faviUri, data:faviSize, "1:1")' expr:sizes='data:faviSize + "x" + data:faviSize' rel='icon' type='image/png'/>
+       </b:loop>
+       <b:loop values='[57,60,72,76,114,120,144,152,180]' var='faviSize'>
+          <link expr:href='resizeImage(data:faviUri, data:faviSize, "1:1")' expr:sizes='data:faviSize + "x" + data:faviSize' rel='apple-touch-icon'/>
+       </b:loop>
+       <b:loop values='[70,150,310]' var='faviSize'>
+         <meta expr:content='resizeImage(data:faviUri, data:faviSize, "1:1")' expr:name='"msapplication-square" + data:faviSize + "x" + data:faviSize + "logo"'/>
+         <b:if cond='data:faviSize in [150]'>
+         <meta expr:content='resizeImage(data:faviUri, 310, "310:150")' expr:name='"msapplication-wide310x" + data:faviSize + "logo"'/>
+         </b:if>
+        </b:loop>
+      </b:with>
+      
       <data:blog.feedLinks/>
       <b:if cond='data:blog.adultContent'>
         <meta content='adult' name='rating'/>
@@ -1487,11 +1507,7 @@ Default markups
 
       <b:comment>=== Open Graph ===</b:comment>
 
-      <b:if cond='data:view.type == "item"'>
-        <meta content='article' property='og:type'/>
-      <b:else/>
-        <meta content='website' property='og:type'/>
-      </b:if>
+      <meta expr:content='data:view.isMultipleItems ? "website" : "article"' property='og:type'/>
       <meta expr:content='data:blog.title' property='og:site_name'/>
       <meta expr:content='data:facebook.pageId' property='fb:pages'/>
       <meta expr:content='data:facebook.adminId' property='fb:admins'/>
